@@ -7,6 +7,7 @@ import {
   ScrollView,
   Button,
   TextInput,
+  FlatList,
 } from "react-native";
 
 const App = () => {
@@ -14,7 +15,7 @@ const App = () => {
   const [goals, setGoals] = useState([]);
 
   const addGoal = () => {
-    setGoals((prevGoals) => [...prevGoals, goal]);
+    setGoals((prevGoals) => [...prevGoals, { text: goal }]);
     setGoal("");
   };
 
@@ -26,18 +27,23 @@ const App = () => {
           value={goal}
           onChangeText={(text) => setGoal(text)}
         />
-        <Button title="Add Goal" onPress={addGoal} />
+        <Button title="Add Goals" onPress={addGoal} />
       </View>
 
-      <View>
+      <View style={{ height: "85%" }}>
         <Text style={styles.heading}>List of goals</Text>
-        <View>
-          {goals.map((item, idx) => (
-            <Text key={idx} style={{ paddingBottom: 5 }}>
-              {item}
-            </Text>
-          ))}
-        </View>
+        <FlatList
+          data={goals}
+          keyExtractor={(item, index) => index}
+          renderItem={(itemData) => (
+            <View style={styles.listItem}>
+              <Text style={{ color: "#efefef" }}>
+                {itemData.item.text}
+                {itemData.index}
+              </Text>
+            </View>
+          )}
+        ></FlatList>
       </View>
     </View>
   );
@@ -48,6 +54,18 @@ const styles = StyleSheet.create({
     paddingVertical: 50,
     paddingHorizontal: 20,
   },
+
+  inputContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+    paddingBottom: 20,
+    borderBottomColor: "#ddd",
+    borderBottomWidth: 1,
+    height: "15%",
+  },
+
   input: {
     borderWidth: 1,
     borderColor: "#ddd",
@@ -55,19 +73,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     flex: 1,
+    marginRight: 10,
   },
-  inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 30,
-    paddingBottom: 30,
-    borderBottomColor: "#ddd",
-    borderBottomWidth: 1,
-  },
+
   heading: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  listItem: {
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "purple",
+    borderRadius: 5,
   },
 });
 
