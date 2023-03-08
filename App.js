@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,42 +8,37 @@ import {
   Button,
   TextInput,
   FlatList,
+  Pressable,
 } from "react-native";
+import AddGoal from "./components/AddGoal";
+import GoalsList from "./components/GoalsList";
 
 const App = () => {
-  const [goal, setGoal] = useState("");
   const [goals, setGoals] = useState([]);
 
-  const addGoal = () => {
+  const addGoal = (goal) => {
     setGoals((prevGoals) => [...prevGoals, { text: goal }]);
-    setGoal("");
+  };
+
+  const removeItem = (index) => {
+    const updatedData = [...goals];
+    updatedData.splice(index, 1);
+    setGoals(updatedData);
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={goal}
-          onChangeText={(text) => setGoal(text)}
-        />
-        <Button title="Add Goals" onPress={addGoal} />
-      </View>
+      <AddGoal addGoal={addGoal} />
 
       <View style={{ height: "85%" }}>
-        <Text style={styles.heading}>List of goals</Text>
-        <FlatList
-          data={goals}
-          keyExtractor={(item, index) => index}
-          renderItem={(itemData) => (
-            <View style={styles.listItem}>
-              <Text style={{ color: "#efefef" }}>
-                {itemData.item.text}
-                {itemData.index}
-              </Text>
-            </View>
-          )}
-        ></FlatList>
+        {goals?.length > 0 ? (
+          <Fragment>
+            <Text style={styles.heading}>List of goals</Text>
+            <GoalsList goals={goals} removeItem={removeItem} />
+          </Fragment>
+        ) : (
+          <Text style={{ fontSize: 20 }}>No goals yet</Text>
+        )}
       </View>
     </View>
   );
@@ -55,38 +50,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
-  inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-    paddingBottom: 20,
-    borderBottomColor: "#ddd",
-    borderBottomWidth: 1,
-    height: "15%",
-  },
-
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderStyle: "solid",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    flex: 1,
-    marginRight: 10,
-  },
-
   heading: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-  },
-  listItem: {
-    marginBottom: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: "purple",
-    borderRadius: 5,
   },
 });
 
