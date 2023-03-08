@@ -17,6 +17,7 @@ const App = () => {
   const [goals, setGoals] = useState([]);
 
   const addGoal = (goal) => {
+    if (!goal) return;
     setGoals((prevGoals) => [...prevGoals, { text: goal }]);
   };
 
@@ -30,14 +31,14 @@ const App = () => {
     <View style={styles.container}>
       <AddGoal addGoal={addGoal} />
 
-      <View style={{ height: "85%" }}>
+      <View style={{ marginTop: 20, flex: 1 }}>
         {goals?.length > 0 ? (
           <Fragment>
             <Text style={styles.heading}>List of goals</Text>
             <GoalsList goals={goals} removeItem={removeItem} />
           </Fragment>
         ) : (
-          <Text style={{ fontSize: 20 }}>No goals yet</Text>
+          <Text style={{ fontSize: 20 }}>No goals yet o.</Text>
         )}
       </View>
     </View>
@@ -46,8 +47,9 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 50,
+    paddingTop: 50,
     paddingHorizontal: 20,
+    flex: 1,
   },
 
   heading: {
